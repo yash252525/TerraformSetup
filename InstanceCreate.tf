@@ -51,9 +51,14 @@ resource "aws_security_group" "my_sg_test" {
 
 # Instance Create
 resource "aws_instance" "my_instance" {
+  count = 2 # meta argument
+  # for_each = tomap ({
+  #   test_workloads = "t3.micro"
+  #   prod_workloads = "t3.medium"
+  # })
   key_name = aws_key_pair.ssh_key.key_name
   security_groups = [aws_security_group.my_sg_test.name]
-  instance_type = var.ec2_instance_type
+  instance_type = var.ec2_instance_type # in case of for_each -> each.value  
   ami = var.ec2_ami_id
 
   # user data for web server installation
@@ -64,6 +69,6 @@ resource "aws_instance" "my_instance" {
     volume_type = "gp3"
   }
   tags = {
-    env = "test"
+    Name = "WEBSEV-EU-N-${ count.index +1 }" # in case of for_each -> Name = each.key
   }
 }
