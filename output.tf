@@ -4,7 +4,7 @@
 #     value = aws_instance.my_instance[*].public_ip
 # }
 
-# Output for multiple server creation we add [*]
+# Output for multiple server creation we add [*] i.e. when using count
 output "ec2_public_ip" {
     value = aws_instance.my_instance[*].public_ip
 }

@@ -56,6 +56,7 @@ resource "aws_instance" "my_instance" {
   #   test_workloads = "t3.micro"
   #   prod_workloads = "t3.medium"
   # })
+  depends_on = [ aws_security_group.my_sg_test ]
   key_name = aws_key_pair.ssh_key.key_name
   security_groups = [aws_security_group.my_sg_test.name]
   instance_type = var.ec2_instance_type # in case of for_each -> each.value  
@@ -65,10 +66,19 @@ resource "aws_instance" "my_instance" {
   user_data = file("C:\\Users\\yashz\\Desktop\\YashPractice\\Terraform\\install_httpd.sh")
 
   root_block_device {
-    volume_size = var.ec2_root_block_size
+    volume_size = var.env == "prod" ? 10 : var.ec2_default_root_block_size
     volume_type = "gp3"
   }
   tags = {
     Name = "WEBSEV-EU-N-${ count.index +1 }" # in case of for_each -> Name = each.key
   }
+}
+
+
+# Importing a resource from AWS
+# We will use instance id to import the data
+
+resource "aws_instance" "manual_created_instance" {
+  ami = "unknown"
+  instance_type = "unknown"
 }
