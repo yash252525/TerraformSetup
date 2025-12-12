@@ -51,7 +51,7 @@ resource "aws_security_group" "my_sg_test" {
 
 # Instance Create
 resource "aws_instance" "my_instance" {
-  count = 2 # meta argument
+  count = 1 # meta argument
   # for_each = tomap ({
   #   test_workloads = "t3.micro"
   #   prod_workloads = "t3.medium"
