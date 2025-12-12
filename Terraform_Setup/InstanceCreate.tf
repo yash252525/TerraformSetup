@@ -63,7 +63,7 @@ resource "aws_instance" "my_instance" {
   ami = var.ec2_ami_id
 
   # user data for web server installation
-  user_data = file("C:\\Users\\yashz\\Desktop\\YashPractice\\Terraform\\install_httpd.sh")
+  user_data = file("C:\\Users\\yashz\\Desktop\\YashPractice\\Terraform\\Terraform_Setup\\install_httpd.sh")
 
   root_block_device {
     volume_size = var.env == "prod" ? 10 : var.ec2_default_root_block_size
