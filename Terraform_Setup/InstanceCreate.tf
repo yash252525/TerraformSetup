@@ -1,8 +1,11 @@
 # key pair
 
 resource aws_key_pair ssh_key {
-    key_name = "terraform_key_ec2"
+    key_name = "${var.env}terraform_key_ec2"
     public_key = file ("C:\\Users\\yashz\\.ssh\\id_ed25519.pub")
+    tags = {
+      env = "Dev"
+    }
 }
 
 # VPC, SG
@@ -12,7 +15,7 @@ resource "aws_default_vpc" "default" {
 }
 
 resource "aws_security_group" "my_sg_test" {
-  name        = "TestSecurityGroup"
+  name        = "${var.env}TestSecurityGroup"
   description = "Default "
   vpc_id      = aws_default_vpc.default.id   # interpolation
 
@@ -43,7 +46,7 @@ resource "aws_security_group" "my_sg_test" {
   }
 
   tags = {
-    Name = "Test SG"
+    Name = "Test SG Dev"
   } 
 }
 
@@ -71,6 +74,7 @@ resource "aws_instance" "my_instance" {
   }
   tags = {
     Name = "WEBSEVDEV-EU-N-${ count.index +1 }" # in case of for_each -> Name = each.key
+    Env = var.env
   }
 }
 
