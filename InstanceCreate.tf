@@ -78,7 +78,7 @@ resource "aws_instance" "my_instance" {
 # Importing a resource from AWS
 # We will use instance id to import the data
 
-resource "aws_instance" "manual_created_instance" {
-  ami = "unknown"
-  instance_type = "unknown"
-}
+# resource "aws_instance" "manual_created_instance" {
+#   ami = "unknown"
+#   instance_type = "unknown"
+# }
