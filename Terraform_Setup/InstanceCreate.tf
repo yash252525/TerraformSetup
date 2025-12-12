@@ -70,7 +70,7 @@ resource "aws_instance" "my_instance" {
     volume_type = "gp3"
   }
   tags = {
-    Name = "WEBSEV-EU-N-${ count.index +1 }" # in case of for_each -> Name = each.key
+    Name = "WEBSEVDEV-EU-N-${ count.index +1 }" # in case of for_each -> Name = each.key
   }
 }
 
