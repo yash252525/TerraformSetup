@@ -75,6 +75,8 @@ kind create cluster --name argocd-cluster --config /root/KindCluster/kind-config
 export KUBECONFIG=/root/.kube/config
 kind export kubeconfig --name argocd-cluster
 echo 'export KUBECONFIG=/root/.kube/config' >> /root/.bashrc
+echo alias k='kubectl' >> /root/.bashrc
+
 
 if kubectl get nodes &> /dev/null; then
     echo "Cluster is ready, nodes are accessible" >> /var/log/user_data_status.txt

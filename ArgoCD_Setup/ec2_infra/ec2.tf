@@ -22,6 +22,14 @@ resource "aws_security_group" "my_sg_test" {
     cidr_blocks      = ["0.0.0.0/0"]
     description      =  "ArgoCD"
   }
+
+  ingress {
+    from_port        = 8081
+    to_port          = 8090
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      =  "ArgoCD Application Deployments Port Forwarding"
+  }
   
   ingress {
   from_port   = 33893
@@ -29,10 +37,10 @@ resource "aws_security_group" "my_sg_test" {
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]  # Only allow from my instances --> changed for now
   description = "Kind Kubernetes API Server"
-}
+  }
 
   # egress
-    egress {
+  egress {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"  #All
@@ -72,11 +80,3 @@ resource "aws_instance" "my_instance" {
   }
 }
 
-
-# Importing a resource from AWS
-# We will use instance id to import the data
-
-# resource "aws_instance" "manual_created_instance" {
-#   ami = "unknown"
-#   instance_type = "unknown"
-# }
