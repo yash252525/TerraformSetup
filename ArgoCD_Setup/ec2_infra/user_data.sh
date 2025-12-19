@@ -75,7 +75,7 @@ kind create cluster --name argocd-cluster --config /root/KindCluster/kind-config
 export KUBECONFIG=/root/.kube/config
 kind export kubeconfig --name argocd-cluster
 echo 'export KUBECONFIG=/root/.kube/config' >> /root/.bashrc
-echo alias k='kubectl' >> /root/.bashrc
+echo "alias k='kubectl'" >> /root/.bashrc
 
 
 if kubectl get nodes &> /dev/null; then
@@ -93,7 +93,7 @@ kubectl create namespace argocd
 if helm install argocd argo/argo-cd -n argocd >> /var/log/user_data_status.txt 2>&1; then
     echo "Helm Installation for ArgoCD Successful." >> /var/log/user_data_status.txt    
     # Wait for secret to be created
-    sleep 10
+    sleep 60
     ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret -n argocd \
       -o jsonpath="{.data.password}" | base64 -d)    
     echo "${ARGOCD_PASSWORD}" > /root/initial_password.txt
@@ -112,10 +112,19 @@ argocd version --client >> /var/log/user_data_status.txt
 
 
 # Exporting port forward to connect ArgoCD
+export HOME=/root
 nohup kubectl port-forward service/argocd-server -n argocd 8080:443 --address=0.0.0.0 \
   > /var/log/argocd-portforward.log 2>&1 &
 
-echo $! > /var/run/argocd-portforward.pid
+PF_PID=$!
+echo $PF_PID > /var/run/argocd-portforward.pid
 disown
 
-echo "ArgoCD port-forward started with PID $(cat /var/run/argocd-portforward.pid)" >> /var/log/user_data_status.txt
+echo "ArgoCD port-forward started with PID ${PF_PID}" >> /var/log/user_data_status.txt
+
+sleep 5
+if ps -p $PF_PID > /dev/null; then
+    echo "Port-forward process is running" >> /var/log/user_data_status.txt
+else
+    echo "ERROR: Port-forward failed to start" >> /var/log/user_data_status.txt
+fi
