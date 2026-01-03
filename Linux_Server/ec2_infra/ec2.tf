@@ -22,6 +22,14 @@ resource "aws_security_group" "my_sg_test" {
     cidr_blocks      = ["0.0.0.0/0"]
     description      =  "HTTP"
   }
+
+  ingress {
+    from_port        = 8080
+    to_port          = 8080
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      =  "HTTP"
+  }
   
   # egress
     egress {
@@ -53,6 +61,7 @@ resource "aws_instance" "my_instance" {
   instance_type = var.ec2_instance_type # in case of for_each -> each.value  
   ami = var.ec2_ami_id
 
+  user_data = file("${path.module}/user_data.sh")
  
   root_block_device {
     volume_size = var.env == "prod" ? 10 : var.ec2_server_root_block_size
