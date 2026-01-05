@@ -5,7 +5,7 @@ exec > >(tee /var/log/user_data.log) 2>&1
 
 # JDK Installation
 sudo apt update
-sudo apt install fontconfig openjdk-21-jre
+sudo apt install fontconfig openjdk-21-jre -y
 java -version >> /var/log/user_data_status.txt
 
 # Jenkins (Long Term Support Release) Installation
