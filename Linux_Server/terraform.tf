@@ -2,8 +2,14 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "6.27.0"
+      version = "6.25.0"
     }
   }
-}
 
+  backend "s3" {
+  bucket = "yze25-s3-remote-backend"
+  key = "terraform.tfstate"
+  dynamodb_table = "Remote_Operator_Table"
+  region = "eu-north-1"
+  }
+}

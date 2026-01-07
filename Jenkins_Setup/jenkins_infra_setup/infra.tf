@@ -28,9 +28,17 @@ resource "aws_security_group" "my_sg_test" {
     to_port          = 8080
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
-    description      =  "HTTP"
+    description      =  "Jenkins Master"
   }
-  
+
+  ingress {
+    from_port        = 8000
+    to_port          = 8000
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      =  "Application Deployment Port"
+  }  
+
   # egress
     egress {
     from_port       = 0
