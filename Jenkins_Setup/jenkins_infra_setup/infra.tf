@@ -49,8 +49,8 @@ resource "aws_security_group" "my_sg_test" {
 
 
 # Instance Create
-resource "aws_instance" "my_instance" {
-  count = var.num_servers # meta argument
+resource "aws_instance" "master_instance" {
+  count = var.master_servers # meta argument
   # for_each = tomap ({
   #   test_workloads = "t3.micro"
   #   prod_workloads = "t3.medium"
@@ -64,13 +64,36 @@ resource "aws_instance" "my_instance" {
   user_data = file("${path.module}/user_data.sh")
  
   root_block_device {
-    volume_size = var.env == "prod" ? 10 : var.ec2_server_root_block_size
+    volume_size = var.env == "prod" ? 10 : var.ec2_server_root_block_size_master
     volume_type = "gp3"
   }
   tags = {
-    Name = "${var.server_name}-${ count.index +1 }" # in case of for_each -> Name = each.key
+    Name = "${var.master_server_name}-${ count.index +1 }" # in case of for_each -> Name = each.key
   }
 }
+
+
+resource "aws_instance" "agent_instance" {
+  count = var.agent_servers # meta argument
+
+  depends_on = [ aws_security_group.my_sg_test ]
+  
+  security_groups = [aws_security_group.my_sg_test.name]
+  instance_type = var.ec2_instance_type # in case of for_each -> each.value  
+  ami = var.ec2_ami_id
+
+  user_data = file("${path.module}/user_data_agent.sh")
+ 
+  root_block_device {
+    volume_size = var.ec2_server_root_block_size_agent
+    volume_type = "gp3"
+  }
+  tags = {
+    Name = "${var.agent_server_name}-${ count.index +1 }" # in case of for_each -> Name = each.key
+  }
+}
+
+
 
 
 # Importing a resource from AWS
