@@ -39,6 +39,22 @@ resource "aws_security_group" "my_sg_test" {
   description = "Kind Kubernetes API Server"
   }
 
+  ingress {
+  from_port   = 9090
+  to_port     = 9090
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]  
+  description = "Prometheus Port"
+  }
+
+  ingress {
+  from_port   = 3000
+  to_port     = 3000
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]  
+  description = "Grafana Port"
+  }
+
   # egress
   egress {
     from_port       = 0
