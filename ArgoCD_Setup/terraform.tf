@@ -7,9 +7,9 @@ terraform {
   }
 
   backend "s3" {
-  bucket = "yze25-s3-remote-backend"
-  key = "ArgoCD.terraform.tfstate"
-  dynamodb_table = "Remote_Operator_Table"
-  region = "eu-north-1"
+  bucket = "yash25-s3-remote-backend-ap-pun-region"
+  key = "terraform.tfstate"
+  dynamodb_table = "Remote_Operator_Table_AP_South"
+  region = "ap-south-1"
   }
 }

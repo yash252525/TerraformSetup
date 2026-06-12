@@ -1,10 +1,10 @@
 variable "aws_region_eu_north_1" {
-    default = "eu-north-1"
+    default = "ap-south-1"
     type = string
 }
 
 variable "ami_id" {
-  default = "ami-0b46816ffa1234887"
+  default = "ami-0ff5003538b60d5ec"
   type        = string
 }
 
@@ -18,7 +18,7 @@ variable "root_volume_storage_worker" {
     type = number
 }
 
-variable "key_name" {
-    default = "yash25key"
-    type = string
-}
+# variable "key_name" {
+#     default = "yash25key"
+#     type = string
+# }

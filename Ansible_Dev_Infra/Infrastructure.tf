@@ -5,7 +5,7 @@
 resource "aws_instance" "Ansible_Master" {
   ami                     = var.ami_id
   instance_type           = var.instance_type
-  key_name                = var.key_name
+  # key_name                = var.key_name
   user_data = file("${path.module}/ansible_setup.sh")
   depends_on = [ aws_security_group.Ansible_Dev_SG ]
   security_groups = [ aws_security_group.Ansible_Dev_SG.name ]
@@ -24,8 +24,7 @@ resource "aws_instance" "Ansible_Worker" {
   count = 2
   ami                     = var.ami_id
   instance_type           = var.instance_type
-  key_name                = var.key_name
-  
+  # key_name                = var.key_name
   user_data = file("${path.module}/worker_setup.sh")
   depends_on = [ aws_security_group.Ansible_Dev_SG ]
   security_groups = [ aws_security_group.Ansible_Dev_SG.name ]

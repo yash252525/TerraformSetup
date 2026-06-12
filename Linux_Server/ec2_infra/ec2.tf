@@ -1,11 +1,17 @@
-resource "aws_default_vpc" "default" {
-  
+# Add these data sources at top of ec2.tf
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnet" "default" {
+  vpc_id       = data.aws_vpc.default.id
+  availability_zone = "ap-south-1a"  # Your AZ
 }
 
 resource "aws_security_group" "my_sg_test" {
   name        = "${var.env}-Terraform-SecurityGroup"
   description = "Default "
-  vpc_id      = aws_default_vpc.default.id   # interpolation
+  vpc_id      = data.aws_vpc.default.id # interpolation
 
   # ingress
   ingress {
@@ -46,32 +52,23 @@ resource "aws_security_group" "my_sg_test" {
   } 
 }
 
-
-
 # Instance Create
 resource "aws_instance" "my_instance" {
-  count = var.num_servers # meta argument
-  # for_each = tomap ({
-  #   test_workloads = "t3.micro"
-  #   prod_workloads = "t3.medium"
-  # })
-  depends_on = [ aws_security_group.my_sg_test ]
+  count = var.num_servers
+  vpc_security_group_ids = [aws_security_group.my_sg_test.id]  
+  subnet_id             = data.aws_subnet.default.id          
+  instance_type         = var.ec2_instance_type
+  ami                   = var.ec2_ami_id
+  user_data             = file("${path.module}/user_data.sh")
   
-  security_groups = [aws_security_group.my_sg_test.name]
-  instance_type = var.ec2_instance_type # in case of for_each -> each.value  
-  ami = var.ec2_ami_id
-
-  user_data = file("${path.module}/user_data.sh")
- 
   root_block_device {
     volume_size = var.env == "prod" ? 10 : var.ec2_server_root_block_size
     volume_type = "gp3"
   }
   tags = {
-    Name = "${var.server_name}-${ count.index +1 }" # in case of for_each -> Name = each.key
+    Name = "${var.server_name}-${count.index + 1}"
   }
 }
-
 
 # Importing a resource from AWS
 # We will use instance id to import the data

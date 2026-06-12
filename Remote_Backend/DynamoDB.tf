@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "basic-dynamodb-table" {
-  name           = "Remote_Operator_Table"
+resource "aws_dynamodb_table" "basic-dynamodb-table-ap-south" {
+  name           = "Remote_Operator_Table_AP_South"
   billing_mode   = "PAY_PER_REQUEST"
   hash_key       = "LockID"
 
