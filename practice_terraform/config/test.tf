@@ -38,6 +38,7 @@ resource "aws_instance" "yash-test-ec2" {
   ami           =  data.aws_ami.latest_amazon_linux.id #"resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
   instance_type = var.ec2_instance_type
   security_groups = [aws_security_group.yze1-test-sg.name]
+  depends_on = [ aws_security_group.yze1-test-sg ]
   root_block_device {
     volume_size = var.root_block_size
     volume_type = "gp3"
